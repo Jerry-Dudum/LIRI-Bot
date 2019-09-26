@@ -37,6 +37,7 @@ inquirer
     });
 
 var artist = "";
+var date = "";
 
 function concertThis() {
     inquirer
@@ -49,15 +50,28 @@ function concertThis() {
         ])
         .then(function (result) {
             if (result.concert === "") {
-                console.log("Please type in an artist this time.");
-                concertThis();
+                console.log("You didn't type out an artitst so I'll just choose Post Malone for you.")
+                artist = "Post Malone"
             }
             else {
                 artist = result.concert;
             }
 
             axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function(response){
-                console.log(response);
+                // console.log(response.data);
+
+                if (response.data.length === 0) {
+                    console.log("Sorry no upcoming events for this artist :(")
+                }
+                else {
+                    console.log("Venue: " + response.data[0].venue.name);
+                    console.log("Venue Location: " + response.data[0].venue.city + ", " + response.data[0].venue.region);
+
+                    date = moment(response.data[0].datetime).format('MM DD YYYY')
+                    console.log("Date: " + date);
+                }
+
+
             })
         })
 }
