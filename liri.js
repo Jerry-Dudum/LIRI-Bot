@@ -57,8 +57,8 @@ function concertThis() {
                 artist = result.concert;
             }
 
-            axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function(response){
-                // console.log(response.data);
+            axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function (response) {
+                // console.log(response.data); used to parse out the data needed
 
                 if (response.data.length === 0) {
                     console.log("Sorry no upcoming events for this artist :(")
@@ -74,4 +74,42 @@ function concertThis() {
 
             })
         })
-}
+};
+
+var song = "";
+
+function spotifyThisSong() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "Please select a song to search up on Spotify.",
+                name: "song"
+            }
+        ])
+        .then(function (result) {
+            if (result.song === "") {
+                console.log("You didn't type out a song so I'll just choose SLOW DANCING IN THE DARK for you.")
+                song = "SLOW DANCING IN THE DARK"
+            }
+            else {
+                song = result.song;
+            }
+
+            spotify.search({ type: 'track', query: song }, function (err, data) {
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                }
+
+                // console.log(data.tracks.items[0]); what i used to parse out data below
+
+                console.log("Artist: " + data.tracks.items[0].album.artists[0].name);
+                console.log("Song Name: " + data.tracks.items[0].name);
+                console.log("Album: " + data.tracks.items[0].album.name);
+                if (data.tracks.items[0].preview_url) {
+                    console.log("Preview Link: " + data.tracks.items[0].preview_url);
+                }
+                
+            })
+        })
+};
