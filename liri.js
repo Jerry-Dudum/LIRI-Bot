@@ -16,7 +16,7 @@ inquirer
             name: "options"
         }
     ])
-    .then(function(result){
+    .then(function (result) {
 
         if (result.options === "concert-this") {
             concertThis();
@@ -36,4 +36,28 @@ inquirer
 
     });
 
-    
+var artist = "";
+
+function concertThis() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "Please select an artist to search up concerts for.",
+                name: "concert"
+            }
+        ])
+        .then(function (result) {
+            if (result.concert === "") {
+                console.log("Please type in an artist this time.");
+                concertThis();
+            }
+            else {
+                artist = result.concert;
+            }
+
+            axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function(response){
+                console.log(response);
+            })
+        })
+}
